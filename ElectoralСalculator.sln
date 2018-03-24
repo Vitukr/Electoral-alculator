@@ -5,6 +5,8 @@ VisualStudioVersion = 15.0.27130.2027
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectoralСalculator", "ElectoralСalculator\ElectoralСalculator.csproj", "{C34F8B13-9E23-42D6-B521-3A0A027F9186}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectoralСalculator.Data", "ElectoralСalculator.Data\ElectoralСalculator.Data.csproj", "{F654BC02-8DC3-4953-BA3C-F047A665AE60}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{C34F8B13-9E23-42D6-B521-3A0A027F9186}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C34F8B13-9E23-42D6-B521-3A0A027F9186}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C34F8B13-9E23-42D6-B521-3A0A027F9186}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F654BC02-8DC3-4953-BA3C-F047A665AE60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F654BC02-8DC3-4953-BA3C-F047A665AE60}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F654BC02-8DC3-4953-BA3C-F047A665AE60}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F654BC02-8DC3-4953-BA3C-F047A665AE60}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

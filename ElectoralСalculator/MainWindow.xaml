@@ -5,8 +5,44 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:ElectoralСalculator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="MainWindow" Height="600" Width="800" MaxHeight="800" MaxWidth="1024" WindowStartupLocation="CenterScreen">
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*"></ColumnDefinition>
+            <ColumnDefinition Width="10*"></ColumnDefinition>            
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="10*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Label Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Vote</Label>
+            <ListBox x:Name="ListBoxCandidates" Grid.Row="1" ItemsSource="{Binding}"></ListBox>
+        </Grid>
+        <Grid Grid.Column="1">
+            <Grid x:Name="GridSignUp">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="10*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="1" Grid.Column="0">
+                    <Label x:Name="LabelSorename">Sorename</Label>
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="1">
+                    <Border Background="Blue"></Border>
+                    <TextBox></TextBox>
+                </Grid>
+            </Grid>
+            <Grid x:Name="GridSignIn">
+
+            </Grid>
+        </Grid>
     </Grid>
 </Window>

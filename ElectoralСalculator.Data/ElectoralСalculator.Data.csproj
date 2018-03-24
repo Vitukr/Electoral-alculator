@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C34F8B13-9E23-42D6-B521-3A0A027F9186}</ProjectGuid>
+    <ProjectGuid>{F654BC02-8DC3-4953-BA3C-F047A665AE60}</ProjectGuid>
     <OutputType>WinExe</OutputType>
-    <RootNamespace>ElectoralСalculator</RootNamespace>
-    <AssemblyName>ElectoralСalculator</AssemblyName>
+    <RootNamespace>ElectoralСalculator.Data</RootNamespace>
+    <AssemblyName>ElectoralСalculator.Data</AssemblyName>
     <TargetFrameworkVersion>v4.7</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFrameworkCore.SqlServerCompact40, Version=2.0.1.0, Culture=neutral, PublicKeyToken=9af395b34ac99006, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFrameworkCore.SqlServerCompact40.2.0.1.1\lib\net461\EntityFrameworkCore.SqlServerCompact40.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore, Version=2.0.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.EntityFrameworkCore.2.0.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
     </Reference>
@@ -83,6 +86,10 @@
     <Reference Include="System.ComponentModel.Composition" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.2.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Diagnostics.DiagnosticSource.4.4.1\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
     </Reference>
@@ -138,12 +145,27 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DTO\CandidateDTO.cs" />
+    <Compile Include="DTO\VoterDTO.cs" />
+    <Compile Include="ElectoralСalculatorContext.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\20180323194524_StartMigration.cs" />
+    <Compile Include="Migrations\20180323194524_StartMigration.designer.cs">
+      <DependentUpon>20180323194524_StartMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20180324101243_SecondMigration.cs" />
+    <Compile Include="Migrations\20180324101243_SecondMigration.designer.cs">
+      <DependentUpon>20180324101243_SecondMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\ElectoralСalculatorContextModelSnapshot.cs" />
+    <Compile Include="Models\Candidate.cs" />
+    <Compile Include="Models\Result.cs" />
+    <Compile Include="Models\Voter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -161,9 +183,7 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
+    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -172,15 +192,12 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\ElectoralСalculator.Data\ElectoralСalculator.Data.csproj">
-      <Project>{f654bc02-8dc3-4953-ba3c-f047a665ae60}</Project>
-      <Name>ElectoralСalculator.Data</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>
-    </PostBuildEvent>
+    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+    if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
   </PropertyGroup>
 </Project>
