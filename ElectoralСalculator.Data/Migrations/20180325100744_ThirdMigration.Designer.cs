@@ -11,15 +11,16 @@ using System;
 namespace ElectoralСalculator.Data.Migrations
 {
     [DbContext(typeof(ElectoralСalculatorContext))]
-    partial class ElectoralСalculatorContextModelSnapshot : ModelSnapshot
+    [Migration("20180325100744_ThirdMigration")]
+    partial class ThirdMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.2-rtm-10011");
 
-            modelBuilder.Entity("ElectoralСalculator.Data.Models.Result", b =>
+            modelBuilder.Entity("ElectoralСalculator.Data.Models.Candidate", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
@@ -30,6 +31,18 @@ namespace ElectoralСalculator.Data.Migrations
                     b.Property<string>("Party")
                         .IsRequired();
 
+                    b.HasKey("Id");
+
+                    b.ToTable("Candidates");
+                });
+
+            modelBuilder.Entity("ElectoralСalculator.Data.Models.Result", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<int>("CandidateId");
+
                     b.Property<bool>("ValidVote");
 
                     b.Property<int>("VoterId");
@@ -37,6 +50,8 @@ namespace ElectoralСalculator.Data.Migrations
                     b.Property<bool>("VotingRights");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CandidateId");
 
                     b.ToTable("Results");
                 });
@@ -63,6 +78,14 @@ namespace ElectoralСalculator.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Voters");
+                });
+
+            modelBuilder.Entity("ElectoralСalculator.Data.Models.Result", b =>
+                {
+                    b.HasOne("ElectoralСalculator.Data.Models.Candidate", "Candidate")
+                        .WithMany()
+                        .HasForeignKey("CandidateId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
         }

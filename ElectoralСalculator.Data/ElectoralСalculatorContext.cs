@@ -12,12 +12,8 @@ namespace ElectoralСalculator.Data
     public class ElectoralСalculatorContext : DbContext
     {
         public DbSet<Voter> Voters { get; set; }
-        public DbSet<Candidate> Candidates { get; set; }
+        //public DbSet<Candidate> Candidates { get; set; }
         public DbSet<Result> Results { get; set; }
-
-        public ElectoralСalculatorContext()
-        {
-        }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

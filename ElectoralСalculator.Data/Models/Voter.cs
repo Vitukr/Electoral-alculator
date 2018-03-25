@@ -15,9 +15,12 @@ namespace ElectoralСalculator.Data.Models
         [Required]
         public string Surname { get; set; }
         [Required]
+        public DateTime BirthDate { get; set; }
+        [Required]
         public string Pesel { get; set; }
         [Required]
-        public DateTime BirthDate { get; set; }
+        public string Password { get; set; }
+
 
         public virtual string FullName
         {

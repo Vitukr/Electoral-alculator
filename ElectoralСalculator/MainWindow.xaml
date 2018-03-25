@@ -3,46 +3,247 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:DV="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+        xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:local="clr-namespace:ElectoralСalculator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800" MaxHeight="800" MaxWidth="1024" WindowStartupLocation="CenterScreen">
+        Title="MainWindow" Height="600" Width="800" MaxHeight="800" MaxWidth="1024" WindowStartupLocation="CenterScreen" FontSize="16">
+    <Window.Resources>
+        <Style TargetType="{x:Type TextBox}">
+            <Setter Property="HorizontalContentAlignment" Value="Center">                
+            </Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+        </Style>
+        <Style TargetType="{x:Type PasswordBox}">
+            <Setter Property="HorizontalContentAlignment" Value="Center">
+            </Setter>
+            <Setter Property="VerticalContentAlignment" Value="Center"></Setter>
+        </Style>
+        <BooleanToVisibilityConverter x:Key="BoolToVisibility"></BooleanToVisibilityConverter>
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="10*"></ColumnDefinition>
             <ColumnDefinition Width="10*"></ColumnDefinition>            
         </Grid.ColumnDefinitions>
-        <Grid Grid.Column="0">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"></RowDefinition>
+            <RowDefinition Height="50"></RowDefinition>
+        </Grid.RowDefinitions>
+        <Grid x:Name="GridCandidates" Grid.Column="0" Grid.Row="0" Visibility="Visible">
             <Grid.RowDefinitions>
                 <RowDefinition Height="50"></RowDefinition>
                 <RowDefinition Height="10*"></RowDefinition>
             </Grid.RowDefinitions>
-            <Label Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center">Vote</Label>
+            <Button x:Name="ButtonVote" Grid.Row="0" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,2" Click="ButtonVote_Click">Vote</Button>
             <ListBox x:Name="ListBoxCandidates" Grid.Row="1" ItemsSource="{Binding}"></ListBox>
         </Grid>
-        <Grid Grid.Column="1">
-            <Grid x:Name="GridSignUp">
+        <Grid x:Name="GridResultsNumber" Grid.Column="0" Grid.Row="0" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="10*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center">Results</Label>
+                <Border Width="20"></Border>
+                <Button x:Name="ButtonCharsShow" Padding="5,2" Click="ButtonCharsShow_Click">Chars</Button>
+            </StackPanel>
+            <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="10*"></RowDefinition>
                     <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <ListBox x:Name="ListBoxResultsCandidates" Grid.Row="0" ItemsSource="{Binding}"></ListBox>
+                <ListBox x:Name="ListBoxResultsParties" Grid.Row="1" ItemsSource="{Binding}"></ListBox>
+                <Label x:Name="LabelResultsAttempts" Grid.Row="2"></Label>
+            </Grid>
+        </Grid>
+        <Grid x:Name="GridResultsChart" Grid.Column="0" Grid.Row="0" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"></RowDefinition>
+                <RowDefinition Height="10*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Label HorizontalAlignment="Center" VerticalAlignment="Center">Results</Label>
+                <Border Width="20"></Border>
+                <Button x:Name="ButtonCharsHide" Padding="5,2" Click="ButtonCharsHide_Click">Numbers</Button>
+            </StackPanel>
+            <Grid Grid.Row="1">
+                <Grid.RowDefinitions>
                     <RowDefinition Height="10*"></RowDefinition>
                     <RowDefinition Height="10*"></RowDefinition>
-                    <RowDefinition Height="10*"></RowDefinition>
+                    <RowDefinition Height="1*"></RowDefinition>
+                </Grid.RowDefinitions>
+                <ScrollViewer Grid.Row="0">
+                    <DVC:Chart Grid.Row="0" x:Name="ListBoxResultsCandidatesChart" Background="LightSteelBlue" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
+                        <DVC:Chart.Series>                            
+                            <DVC:BarSeries Title="Candidates" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=Name}"      DependentValueBinding="{Binding Path=Votes}">
+                            </DVC:BarSeries>
+                        </DVC:Chart.Series>
+                    </DVC:Chart>
+                </ScrollViewer>
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                    <DVC:Chart Grid.Row="1" x:Name="ListBoxResultsPartiesChart" Background="LightSteelBlue" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
+                        <DVC:Chart.Series>
+                            <DVC:BarSeries Title="Parties" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=Party}"      DependentValueBinding="{Binding Path=Votes}">
+                            </DVC:BarSeries>
+                        </DVC:Chart.Series>
+                    </DVC:Chart>
+                </ScrollViewer>                
+                <Label x:Name="LabelResultsAttemptsChart" Grid.Row="2"></Label>
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Column="1" Grid.Row="0">
+            <Grid x:Name="GridSignIn" Visibility="Visible">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
                     <ColumnDefinition Width="10*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center" >Sign in</Label>
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Label x:Name="LabelSignInInfo" HorizontalAlignment="Center" VerticalAlignment="Center" ></Label>
+                </Grid>
+                <Grid Grid.Row="2" Grid.Column="0">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">Forename</Label>
+                </Grid>
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <TextBox x:Name="TextBoxSignInForename">Vitalii</TextBox>
+                </Grid>
+                <Grid Grid.Row="3" Grid.Column="0">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">Surname</Label>
+                </Grid>
+                <Grid Grid.Row="3" Grid.Column="1">
+                    <TextBox x:Name="TextBoxSignInSurname">Yarema</TextBox>
+                </Grid>
+                <Grid Grid.Row="4" Grid.Column="0">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">PESEL</Label>
+                </Grid>
+                <Grid Grid.Row="4" Grid.Column="1">
+                    <TextBox x:Name="TextBoxSignInPesel">63040612345</TextBox>
+                </Grid>
+                <Grid Grid.Row="5" Grid.Column="0">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">Password</Label>
+                </Grid>
+                <Grid Grid.Row="5" Grid.Column="1">
+                    <PasswordBox x:Name="TextBoxSignInPassword" Password="Test"></PasswordBox>
+                </Grid>
+                <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Button x:Name="ButtonSignIn" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonSignIn_Click" Padding="5,2">Sign in</Button>
+                </Grid>
+                <Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Button x:Name="ButtonSignUp" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonSignUp_Click" Padding="5,2">Sign up</Button>
+                </Grid>
+            </Grid>
+            <Grid x:Name="GridSignUp" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center" >Sign up</Label>
+                </Grid>
+                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Label x:Name="LabelSignUpInfo" HorizontalAlignment="Center" VerticalAlignment="Center">Please fill all fields</Label>
+                </Grid>
+                <Grid Grid.Row="2" Grid.Column="0">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">Forename</Label>
+                </Grid>
+                <Grid Grid.Row="2" Grid.Column="1">
+                    <TextBox x:Name="TextBoxSignUpForename"></TextBox>
+                </Grid>
+                <Grid Grid.Row="3" Grid.Column="0">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">Surname</Label>
+                </Grid>
+                <Grid Grid.Row="3" Grid.Column="1">
+                    <TextBox x:Name="TextBoxSignUpSurname"></TextBox>
+                </Grid>
+                <Grid Grid.Row="4" Grid.Column="0">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">BirthDate</Label>
+                </Grid>
+                <Grid Grid.Row="4" Grid.Column="1">
+                    <DatePicker x:Name="DatePickerSignUpBirthDate"></DatePicker>
+                </Grid>
+                <Grid Grid.Row="5" Grid.Column="0">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">Pesel</Label>
+                </Grid>
+                <Grid Grid.Row="5" Grid.Column="1">
+                    <TextBox x:Name="TextBoxSignUpPesel"></TextBox>
+                </Grid>
+                <Grid Grid.Row="6" Grid.Column="0">
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">Password</Label>
+                </Grid>
+                <Grid Grid.Row="6" Grid.Column="1">
+                    <TextBox x:Name="TextBoxSignUpPassword"></TextBox>
+                </Grid>
+                <Grid Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Button x:Name="ButtonSignUpRegister" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,2" Click="ButtonSignUpRegister_Click">Register</Button>
+                </Grid>
+                <Grid Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Button x:Name="ButtonSignUpBack" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,2" Click="ButtonSignUpBack_Click">Back</Button>
+                </Grid>
+            </Grid>
+            <Grid x:Name="GridWelcome" Visibility="Collapsed">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                    <RowDefinition Height="30"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="5*"></ColumnDefinition>
+                    <ColumnDefinition Width="10*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Label x:Name="LabelWelcome" HorizontalAlignment="Center" VerticalAlignment="Center" >Welcome</Label>
+                </Grid>
                 <Grid Grid.Row="1" Grid.Column="0">
-                    <Label x:Name="LabelSorename">Sorename</Label>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">Your PESEL #</Label>
                 </Grid>
                 <Grid Grid.Row="1" Grid.Column="1">
-                    <Border Background="Blue"></Border>
-                    <TextBox></TextBox>
+                    <TextBox x:Name="TextBoxWelcomePESEL" IsReadOnly="True">1</TextBox>
+                </Grid>
+                <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Button x:Name="ButtonWelcomeSignOut" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,2" Click="ButtonWelcomeSignOut_Click" >Sign out</Button>
                 </Grid>
             </Grid>
-            <Grid x:Name="GridSignIn">
+        </Grid>
 
-            </Grid>
+        <Grid Grid.Column="1" Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="10*"></ColumnDefinition>
+                <ColumnDefinition Width="10*"></ColumnDefinition>
+                <ColumnDefinition Width="10*"></ColumnDefinition>
+            </Grid.ColumnDefinitions>
+            <Button x:Name="ButtonCSV" Padding="5,2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonCSV_Click">Save CSV</Button>
+            <Button x:Name="ButtonPDF" Padding="5,2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonPDF_Click">Save PDF</Button>
+            <Button x:Name="ButtonExit" Padding="5,2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" >Exit</Button>
         </Grid>
     </Grid>
 </Window>

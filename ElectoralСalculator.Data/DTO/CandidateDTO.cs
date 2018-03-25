@@ -8,10 +8,10 @@ namespace ElectoralСalculator.Data.DTO
 {
     public class CandidateDTO
     {
-        public int Id { get; set; }
+        //public int Id { get; set; }
         public string Name { get; set; }
         public string Party { get; set; }
 
-        public virtual string FullName { get; set; }
+        public virtual string FullName { get { return Name + " - " + Party; } }
     }
 }

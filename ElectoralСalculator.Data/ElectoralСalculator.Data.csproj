@@ -23,6 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -36,6 +37,9 @@
   <ItemGroup>
     <Reference Include="EntityFrameworkCore.SqlServerCompact40, Version=2.0.1.0, Culture=neutral, PublicKeyToken=9af395b34ac99006, processorArchitecture=MSIL">
       <HintPath>..\packages\EntityFrameworkCore.SqlServerCompact40.2.0.1.1\lib\net461\EntityFrameworkCore.SqlServerCompact40.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.EntityFrameworkCore, Version=2.0.2.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.EntityFrameworkCore.2.0.2\lib\netstandard2.0\Microsoft.EntityFrameworkCore.dll</HintPath>
@@ -161,6 +165,14 @@
     <Compile Include="Migrations\20180324101243_SecondMigration.cs" />
     <Compile Include="Migrations\20180324101243_SecondMigration.designer.cs">
       <DependentUpon>20180324101243_SecondMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20180325100744_ThirdMigration.cs" />
+    <Compile Include="Migrations\20180325100744_ThirdMigration.designer.cs">
+      <DependentUpon>20180325100744_ThirdMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\20180325125207_ForthMigration.cs" />
+    <Compile Include="Migrations\20180325125207_ForthMigration.designer.cs">
+      <DependentUpon>20180325125207_ForthMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\ElectoralСalculatorContextModelSnapshot.cs" />
     <Compile Include="Models\Candidate.cs" />

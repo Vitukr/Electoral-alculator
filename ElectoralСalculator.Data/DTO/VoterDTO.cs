@@ -11,8 +11,9 @@ namespace ElectoralСalculator.Data.DTO
         public int Id { get; set; }
         public string Forename { get; set; }
         public string Surname { get; set; }
-        public string Pesel { get; set; }
         public DateTime BirthDate { get; set; }
+        public string Pesel { get; set; }        
+        public string Password { get; set; }
 
         public string FullName 
         {

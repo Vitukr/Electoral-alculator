@@ -11,9 +11,10 @@ using System;
 namespace ElectoralСalculator.Data.Migrations
 {
     [DbContext(typeof(ElectoralСalculatorContext))]
-    partial class ElectoralСalculatorContextModelSnapshot : ModelSnapshot
+    [Migration("20180325125207_ForthMigration")]
+    partial class ForthMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
