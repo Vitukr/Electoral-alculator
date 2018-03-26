@@ -7,7 +7,7 @@
         xmlns:DVC="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
         xmlns:local="clr-namespace:ElectoralСalculator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="600" Width="800" MaxHeight="800" MaxWidth="1024" WindowStartupLocation="CenterScreen" FontSize="16">
+        Title="ElectoralСalculator" Height="600" Width="800" WindowStartupLocation="CenterScreen" FontSize="16" WindowState="Maximized">
     <Window.Resources>
         <Style TargetType="{x:Type TextBox}">
             <Setter Property="HorizontalContentAlignment" Value="Center">                
@@ -75,7 +75,7 @@
                     <RowDefinition Height="10*"></RowDefinition>
                     <RowDefinition Height="1*"></RowDefinition>
                 </Grid.RowDefinitions>
-                <ScrollViewer Grid.Row="0">
+                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <DVC:Chart Grid.Row="0" x:Name="ListBoxResultsCandidatesChart" Background="LightSteelBlue" VerticalContentAlignment="Stretch" HorizontalContentAlignment="Stretch">
                         <DVC:Chart.Series>                            
                             <DVC:BarSeries Title="Candidates" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=Name}"      DependentValueBinding="{Binding Path=Votes}">
@@ -83,7 +83,7 @@
                         </DVC:Chart.Series>
                     </DVC:Chart>
                 </ScrollViewer>
-                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
                     <DVC:Chart Grid.Row="1" x:Name="ListBoxResultsPartiesChart" Background="LightSteelBlue" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch">
                         <DVC:Chart.Series>
                             <DVC:BarSeries Title="Parties" ItemsSource="{Binding}" IndependentValueBinding="{Binding Path=Party}"      DependentValueBinding="{Binding Path=Votes}">
@@ -221,14 +221,14 @@
                     <ColumnDefinition Width="10*"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
-                    <Label x:Name="LabelWelcome" HorizontalAlignment="Center" VerticalAlignment="Center" >Welcome</Label>
+                    <Label HorizontalAlignment="Center" VerticalAlignment="Center" >Welcome</Label>
                 </Grid>
-                <Grid Grid.Row="1" Grid.Column="0">
-                    <Label HorizontalAlignment="Center" VerticalAlignment="Center">Your PESEL #</Label>
+                <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2">
+                    <Label x:Name="LabelWelcome" HorizontalAlignment="Center" VerticalAlignment="Center"></Label>
                 </Grid>
-                <Grid Grid.Row="1" Grid.Column="1">
+                <!--<Grid Grid.Row="1" Grid.Column="1">
                     <TextBox x:Name="TextBoxWelcomePESEL" IsReadOnly="True">1</TextBox>
-                </Grid>
+                </Grid>-->
                 <Grid Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2">
                     <Button x:Name="ButtonWelcomeSignOut" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="5,2" Click="ButtonWelcomeSignOut_Click" >Sign out</Button>
                 </Grid>
@@ -243,7 +243,7 @@
             </Grid.ColumnDefinitions>
             <Button x:Name="ButtonCSV" Padding="5,2" Grid.Column="0" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonCSV_Click">Save CSV</Button>
             <Button x:Name="ButtonPDF" Padding="5,2" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonPDF_Click">Save PDF</Button>
-            <Button x:Name="ButtonExit" Padding="5,2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" >Exit</Button>
+            <Button x:Name="ButtonExit" Padding="5,2" Grid.Column="2" VerticalAlignment="Center" HorizontalAlignment="Center" Click="ButtonExit_Click" >Exit</Button>
         </Grid>
     </Grid>
 </Window>

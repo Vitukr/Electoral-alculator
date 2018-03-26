@@ -5,6 +5,7 @@ using ElectoralСalculator.Data.Models;
 using iTextSharp.text;
 using iTextSharp.text.pdf;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Win32;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -103,7 +104,7 @@ namespace ElectoralСalculator
             var password = TextBoxSignInPassword.Password.Trim();
             using (var db = new ElectoralСalculatorContext())
             {
-                var result = db.Voters.Where(r => r.Forename == forename && r.Surname == surname && r.Pesel == pesel && r.Password == password.GetHashCode().ToString()).FirstOrDefault();
+                var result = db.Voters.Where(r => r.Forename == forename && r.Surname == surname && r.Pesel == pesel.GetHashCode().ToString() && r.Password == password.GetHashCode().ToString()).FirstOrDefault();
                 if(result is Voter voter)
                 {
                     Voter = voter;
@@ -111,7 +112,7 @@ namespace ElectoralСalculator
                     GridSignUp.Visibility = Visibility.Collapsed;
                     //ButtonVote.Visibility = Visibility.Visible;
                     GridWelcome.Visibility = Visibility.Visible;
-                    TextBoxWelcomePESEL.Text = Voter.Pesel;
+                    LabelWelcome.Content = Voter.FullName;
                 }
                 else
                 {
@@ -155,11 +156,11 @@ namespace ElectoralСalculator
                 return;
             }
 
-            var newvoter = new Voter() { Forename = forename, Surname = surname, BirthDate = birthdate, Pesel = pesel, Password = password.GetHashCode().ToString() };
+            var newvoter = new Voter() { Forename = forename, Surname = surname, BirthDate = birthdate, Pesel = pesel.GetHashCode().ToString(), Password = password.GetHashCode().ToString() };
 
             using (var db = new ElectoralСalculatorContext())
             {
-                var result = db.Voters.Where(r => r.Forename == forename && r.Surname == surname && r.Pesel == pesel).FirstOrDefault();
+                var result = db.Voters.Where(r => r.Forename == forename && r.Surname == surname && r.Pesel == pesel.GetHashCode().ToString()).FirstOrDefault();
                 if (result is Voter voter)
                 {
                     GridSignUp.Visibility = Visibility.Collapsed;
@@ -269,59 +270,133 @@ namespace ElectoralСalculator
 
         private void ButtonCSV_Click(object sender, RoutedEventArgs e)
         {
-            using (var sr = new StreamReader(@"countrylist.csv"))
+            SaveFileDialog saveFileDialog = new SaveFileDialog()
             {
-                using (var sw = new StreamWriter(@"countrylistoutput.csv"))
+                FileName = "Results",
+                DefaultExt = "csv",
+                AddExtension = true,
+                OverwritePrompt = true,
+                Filter = "CSV files (*.csv)|*.csv"
+            };
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                if (saveFileDialog.OverwritePrompt == true)
                 {
-                    var reader = new CsvReader(sr);
+                    if (File.Exists(saveFileDialog.FileName))
+                    {
+                        File.Delete(saveFileDialog.FileName);
+                    }
+                }
+                SaveToCSV(saveFileDialog.FileName);
+            }
+        }
+
+        private void SaveToCSV(string fileName)
+        {
+            using (var db = new ElectoralСalculatorContext())
+            {
+                var candidatesResult = db.Results.Where(r => r.Name != string.Empty).GroupBy(r => r.Name).Select(r => new { r.Key, Count = r.Count() }).ToDictionary(r => r.Key, r => r.Count);
+                var partiesResult = db.Results.Where(r => r.Party != string.Empty).GroupBy(r => r.Party).Select(r => new { r.Key, Count = r.Count() }).ToDictionary(r => r.Key, r => r.Count);
+                var attemptsResult = db.Results.Where(r => r.VotingRights == false).Count();
+
+                var cr = candidates.Select(r => new { r.Name, Votes = (candidatesResult.Keys.Contains(r.Name) ? candidatesResult[r.Name] : 0) }).ToList();
+                var pr = candidates.Select(r => new { r.Party, Votes = (partiesResult.Keys.Contains(r.Party) ? partiesResult[r.Party] : 0) }).Distinct().ToList();                               
+
+                using (var sw = new StreamWriter(fileName))
+                {
                     var writer = new CsvWriter(sw);
 
-                    //CSVReader will now read the whole file into an enumerable
-                    //IEnumerable records = reader.GetRecords<DataRecord>().ToList();
+                    writer.WriteRecords(cr);
+                    writer.WriteField("");
+                    writer.WriteField("");
+                    writer.NextRecord();
+                    writer.WriteField("Party");
+                    writer.WriteField("Votes");
+                    writer.NextRecord();
 
-                    //Write the entire contents of the CSV file into another
-                    List<string> test = new List<string>();
-                    writer.WriteRecords(test);
+                    writer.WriteRecords(pr);
+                    writer.WriteField("");
+                    writer.WriteField("");
+                    writer.NextRecord();
 
-                    //Now we will write the data into the same output file but will do it 
-                    //Using two methods.  The first is writing the entire record.  The second
-                    //method writes individual fields.  Note you must call NextRecord method after 
-                    //using Writefield to terminate the record.
-
-                    //Note that WriteRecords will write a header record for you automatically.  If you 
-                    //are not using the WriteRecords method and you want to a header, you must call the 
-                    //Writeheader method like the following:
-                    //
-                    //writer.WriteHeader<DataRecord>();
-                    //
-                    //Do not use WriteHeader as WriteRecords will have done that already.
-
-                    //foreach (DataRecord record in records)
-                    //{
-                    //    //Write entire current record
-                    //    writer.WriteRecord(record);
-
-                    //    //write record field by field
-                    //    writer.WriteField(record.CommonName);
-                    //    writer.WriteField(record.FormalName);
-                    //    writer.WriteField(record.TelephoneCode);
-                    //    writer.WriteField(record.CountryCode);
-                    //    //ensure you write end of record when you are using WriteField method
-                    //    writer.NextRecord();
-                    //}
+                    var attempts = new { Name = "Number of attempts to vote by people without voting rights", Votes = attemptsResult };
+                    //writer.WriteRecord(attempts);
+                    writer.WriteField(attempts.Name);
+                    writer.WriteField(attempts.Votes);
+                    writer.NextRecord();
                 }
             }
         }
 
         private void ButtonPDF_Click(object sender, RoutedEventArgs e)
         {
-            FileStream fs = new FileStream("Chapter1_Example1.pdf", FileMode.Create, FileAccess.Write, FileShare.None);
+            SaveFileDialog saveFileDialog = new SaveFileDialog()
+            {
+                FileName = "Results",
+                DefaultExt = "pdf",
+                AddExtension = true,
+                OverwritePrompt = true,
+                Filter = "PDF files (*.pdf)|*.pdf"
+            };
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                if (saveFileDialog.OverwritePrompt == true)
+                {
+                    if (File.Exists(saveFileDialog.FileName))
+                    {
+                        File.Delete(saveFileDialog.FileName);
+                    }
+                }
+                SaveToPDF(saveFileDialog.FileName);
+            }
+        }
 
-            Document doc = new Document();
-            PdfWriter writer = PdfWriter.GetInstance(doc, fs);
-            doc.Open();
-            doc.Add(new iTextSharp.text.Paragraph("Hello World"));
-            doc.Close();
+        private void SaveToPDF(string fileName)
+        {
+            using (var db = new ElectoralСalculatorContext())
+            {
+                var candidatesResult = db.Results.Where(r => r.Name != string.Empty).GroupBy(r => r.Name).Select(r => new { r.Key, Count = r.Count() }).ToDictionary(r => r.Key, r => r.Count);
+                var partiesResult = db.Results.Where(r => r.Party != string.Empty).GroupBy(r => r.Party).Select(r => new { r.Key, Count = r.Count() }).ToDictionary(r => r.Key, r => r.Count);
+                var attemptsResult = db.Results.Where(r => r.VotingRights == false).Count();
+
+                var cr = candidates.Select(r => new { r.Name, Votes = (candidatesResult.Keys.Contains(r.Name) ? candidatesResult[r.Name] : 0) }).ToList();
+                var pr = candidates.Select(r => new { r.Party, Votes = (partiesResult.Keys.Contains(r.Party) ? partiesResult[r.Party] : 0) }).Distinct().ToList();
+
+                FileStream fs = new FileStream(fileName, FileMode.Create, FileAccess.Write, FileShare.None);
+
+                Document doc = new Document();
+                PdfWriter writer = PdfWriter.GetInstance(doc, fs);
+                doc.Open();
+
+                PdfPTable table = new PdfPTable(2);
+
+                table.AddCell("Name");
+                table.AddCell("Votes");
+                foreach (var record in cr)
+                {
+                    table.AddCell(record.Name);
+                    table.AddCell(record.Votes.ToString());
+                }
+
+                table.AddCell(" ");
+                table.AddCell(" ");
+
+                table.AddCell("Party");
+                table.AddCell("Votes");
+                foreach (var record in pr)
+                {
+                    table.AddCell(record.Party);
+                    table.AddCell(record.Votes.ToString());
+                }
+
+                table.AddCell(" ");
+                table.AddCell(" ");
+                table.AddCell("Number of attempts to vote by people without voting rights");
+                table.AddCell(attemptsResult.ToString());
+
+                doc.Add(table);
+                doc.Close();
+            }
         }
     }
 }
