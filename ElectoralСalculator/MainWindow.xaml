@@ -121,25 +121,25 @@
                     <Label HorizontalAlignment="Center" VerticalAlignment="Center">Forename</Label>
                 </Grid>
                 <Grid Grid.Row="2" Grid.Column="1">
-                    <TextBox x:Name="TextBoxSignInForename">Vitalii</TextBox>
+                    <TextBox x:Name="TextBoxSignInForename"></TextBox>
                 </Grid>
                 <Grid Grid.Row="3" Grid.Column="0">
                     <Label HorizontalAlignment="Center" VerticalAlignment="Center">Surname</Label>
                 </Grid>
                 <Grid Grid.Row="3" Grid.Column="1">
-                    <TextBox x:Name="TextBoxSignInSurname">Yarema</TextBox>
+                    <TextBox x:Name="TextBoxSignInSurname"></TextBox>
                 </Grid>
                 <Grid Grid.Row="4" Grid.Column="0">
                     <Label HorizontalAlignment="Center" VerticalAlignment="Center">PESEL</Label>
                 </Grid>
                 <Grid Grid.Row="4" Grid.Column="1">
-                    <TextBox x:Name="TextBoxSignInPesel">63040612345</TextBox>
+                    <TextBox x:Name="TextBoxSignInPesel"></TextBox>
                 </Grid>
                 <Grid Grid.Row="5" Grid.Column="0">
                     <Label HorizontalAlignment="Center" VerticalAlignment="Center">Password</Label>
                 </Grid>
                 <Grid Grid.Row="5" Grid.Column="1">
-                    <PasswordBox x:Name="TextBoxSignInPassword" Password="Test"></PasswordBox>
+                    <PasswordBox x:Name="TextBoxSignInPassword"></PasswordBox>
                 </Grid>
                 <Grid Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
                     <Button x:Name="ButtonSignIn" HorizontalAlignment="Center" VerticalAlignment="Center" Click="ButtonSignIn_Click" Padding="5,2">Sign in</Button>

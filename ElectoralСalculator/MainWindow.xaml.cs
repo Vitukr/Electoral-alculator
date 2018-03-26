@@ -113,6 +113,11 @@ namespace ElectoralСalculator
                     //ButtonVote.Visibility = Visibility.Visible;
                     GridWelcome.Visibility = Visibility.Visible;
                     LabelWelcome.Content = Voter.FullName;
+
+                    TextBoxSignInForename.Text = string.Empty;
+                    TextBoxSignInSurname.Text = string.Empty;
+                    TextBoxSignInPesel.Text = string.Empty;
+                    TextBoxSignInPassword.Password = string.Empty;
                 }
                 else
                 {
